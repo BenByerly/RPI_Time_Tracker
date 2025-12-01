@@ -1,3 +1,5 @@
+## test file to show the pixels on the screen via left middle right with indiviual pixel test
+
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 

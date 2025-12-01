@@ -1,3 +1,8 @@
+# /tft-app/display.py
+# this file displays the times on an LCD display for the RPI
+# it will eventually allow for a breadboard with a button to strikethrough
+#    each of the times as the day goes on
+
 from PIL import Image, ImageDraw, ImageFont
 import numpy as np
 import os
