@@ -5,7 +5,7 @@ from PIL import Image, ImageDraw, ImageFont
 from times import col_1, col_2, crossed
 
 def draw_screen():
-    img = Image.new("RGB", (480, 320), "white")
+    img = Image.new("RGB", (480, 320), "#00FFFF")
     draw = ImageDraw.Draw(img)
 
     # small fonts for other times.
