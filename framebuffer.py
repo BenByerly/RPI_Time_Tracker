@@ -1,12 +1,8 @@
-# /tft-app/display.py
-# this file displays the times on an LCD display for the RPI
-# it will eventually allow for a breadboard with a button to strikethrough
-#    each of the times as the day goes on
+# framebuffer.py
 
-from PIL import Image, ImageDraw, ImageFont
 import numpy as np
-import os
-
+from PIL import Image, ImageDraw, ImageFont
+from times import col_1, col_2, crossed
 
 def draw_screen():
     img = Image.new("RGB", (480, 320), "white")
@@ -60,8 +56,3 @@ def draw_screen():
 
     with open("/dev/fb1", "wb") as f:
         f.write(fb_data)
-
-
-
-
-draw_screen()
