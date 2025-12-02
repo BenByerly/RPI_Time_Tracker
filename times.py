@@ -19,7 +19,12 @@ times = [
     "1:00", "1:15", "1:30", "1:45",
     "2:00", "2:15", "2:30", "2:45",
     "3:00", "3:15", "3:30", "3:45",
+
+    
 ]
+
+strike_fourpm = False
+
 # colum assignment
 mid = len(times) // 2
 col_1 = times[:mid]
