@@ -2,7 +2,7 @@
 
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
-from times import col_1, col_2, crossed
+from times import col_1, col_2, crossed, strike_fourpm
 
 def draw_screen():
     img = Image.new("RGB", (480, 320), "#00FFFF")
@@ -39,8 +39,10 @@ def draw_screen():
             draw.line((mid_x, y+10, mid_x+60, y+10), fill="white", width=2)
         y += spacing
 
-    # big font
+    # big font and 4pm strike 
     draw.text((big_x - 40, 120), "4:00!!", fill="black", font=big_font)
+    if strike_fourpm:
+        draw.line((big_x - 45, 150, big_x + 90, 150), fill="white", width=4)
 
 
     # convert it to numpy
