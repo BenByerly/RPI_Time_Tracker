@@ -1,8 +1,9 @@
 # framebuffer.py
 
 import numpy as np
+import times
 from PIL import Image, ImageDraw, ImageFont
-from times import col_1, col_2, crossed, strike_fourpm
+# from times import col_1, col_2, crossed, strike_fourpm
 
 def draw_screen():
     img = Image.new("RGB", (480, 320), "#00FFFF")
@@ -23,25 +24,25 @@ def draw_screen():
 
     # draw left column
     y = y_start
-    for i, t in enumerate(col_1):
+    for i, t in enumerate(times.col_1):
         draw.text((left_x, y), t, fill="black", font=font)
-        if crossed[i]:
+        if times.crossed[i]:
             draw.line((left_x, y+10, left_x+60, y+10), fill="white", width=2)
         y += spacing
 
 
     # draw mid column
     y = y_start
-    for j, t in enumerate(col_2):
-        idx = j + len(col_1)
+    for j, t in enumerate(times.col_2):
+        idx = j + len(times.col_1)
         draw.text((mid_x, y), t, fill="black", font=font)
-        if crossed[idx]:
+        if times.crossed[idx]:
             draw.line((mid_x, y+10, mid_x+60, y+10), fill="white", width=2)
         y += spacing
 
     # big font and 4pm strike 
     draw.text((big_x - 40, 120), "4:00!!", fill="black", font=big_font)
-    if strike_fourpm:
+    if times.strike_fourpm:
         draw.line((big_x - 45, 150, big_x + 90, 150), fill="white", width=4)
 
 

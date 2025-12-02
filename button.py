@@ -9,9 +9,9 @@
 
 import time
 import RPi.GPIO as GPIO
-
+import times
 # shared states from all modules
-from times import crossed, ptr, col_1, col_2, times
+# TEMP from times import crossed, ptr, col_1, col_2, times, strike_fourpm
 from framebuffer import draw_screen
 
 # BCM layout
@@ -44,35 +44,54 @@ GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # cross out next time
 def cross_next():
-    global ptr
-    if ptr < len(crossed):
-        crossed[ptr] = True               # mark the time as crossed out
-        ptr += 1                          # move ptr forwards
+    # global times.ptr, times.strike_fourpm
+    if times.ptr < len(times.crossed):
+        times.crossed[times.ptr] = True               # mark the time as crossed out
+        times.ptr += 1                          # move ptr forwards
         draw_screen()                     # update the display
-        print(f"[CROSS] {times[ptr-1]}")
-    else:
-        print("[CROSS] All done")
+        print(f"[CROSS] {times.times[times.ptr-1]}")
+        return
+    #else:
+    #    print("[CROSS] All done")
+
+    if not times.strike_fourpm:
+        times.strike_fourpm = True
+        print("[CROSS] 4 PM struck")
+        draw_screen()
+        return
+
+    print("[CROSS] All done(4 PM already struck)")
+
 
 
 
 # double click to undo
 def undo_last():
-    global ptr
-    if ptr > 0:
-        ptr -=1                           # move ptr backwards
-        crossed[ptr] = False              # un cross the line 
+    # global times.ptr, times.strike_fourpm
+
+    if times.strike_fourpm:
+        times.strike_fourpm = False
+        print("[UNDO] 4 PM")
+        draw_screen()
+        return
+
+    if times.ptr > 0:
+        times.ptr -=1                           # move ptr backwards
+        times.crossed[times.ptr] = False              # un cross the line 
         draw_screen()                     # update display
-        print(f"[UNDO] {times[ptr]}")
+        print(f"[UNDO] {times.times[times.ptr]}")
     else:
         print("[UNDO] Nothing to undo")
 
 
 
 def reset_all():
-    global ptr
-    for i in range(len(crossed)):
-        crossed[i] = False                # uncross all times
-    ptr = 0                               # reset ptr to first value
+    # global times.ptr, times.strike_fourpm
+    for i in range(len(times.crossed)):
+        times.crossed[i] = False                # uncross all times
+    times.ptr = 0                               # reset ptr to first value
+    times.strike_fourpm = False
+
     draw_screen()                         # update display
     print("[RESET] All cleared")
 
@@ -87,7 +106,8 @@ def reset_all():
 def process_button_events():
     # detects the actual clicks: single click, double click, and long press
     global click_pending, first_click_time, press_start_time
-    global ignore_until_release, ptr
+    global ignore_until_release
+    # times.ptr
 
     # is button released
     if ignore_until_release:
