@@ -26,7 +26,7 @@ def draw_screen():
     for i, t in enumerate(col_1):
         draw.text((left_x, y), t, fill="black", font=font)
         if crossed[i]:
-            draw.line((left_x, y+10, left_x+60, y+10), fill="red", width=2)
+            draw.line((left_x, y+10, left_x+60, y+10), fill="white", width=2)
         y += spacing
 
 
@@ -36,7 +36,7 @@ def draw_screen():
         idx = j + len(col_1)
         draw.text((mid_x, y), t, fill="black", font=font)
         if crossed[idx]:
-            draw.line((mid_x, y+10, mid_x+60, y+10), fill="red", width=2)
+            draw.line((mid_x, y+10, mid_x+60, y+10), fill="white", width=2)
         y += spacing
 
     # big font
