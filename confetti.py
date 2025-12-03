@@ -9,7 +9,7 @@ def draw_confetti_frame(base_img):
     draw = ImageDraw.Draw(img)
 
     # any n of confetti 
-    for _ in range(40):
+    for _ in range(200):
         x = np.random.randint(0, 480)
         y = np.random.randint(0, 320)
         color = tuple(np.random.randint(0, 255, 3))
@@ -18,9 +18,7 @@ def draw_confetti_frame(base_img):
 
     return img
 
-
-
-def run_confetti(duration=1.5, fps=20):
+def run_confetti(duration=3.5, fps=20):
     base_image = render_to_image()
     frame_time = 1.0 / fps
     end_time = time.time() + duration
@@ -30,18 +28,6 @@ def run_confetti(duration=1.5, fps=20):
         push_frame(frame)
         time.sleep(frame_time)
 
-
-
-def push_frame(img):
-    arr = np.asarray(img, dtype=np.uint8)
-
-    # convert it to RGB 565 
-    r = (arr[:,:,0] >> 3).astype(np.uint16)
-    g = (arr[:,:,1] >> 2).astype(np.uint16)
-    b = (arr[:,:,2] >> 3).astype(np.uint16)
-    rgb565 = (r << 11) | (g << 5) | b
-
-    fb_data = rgb565.astype('<u2').tobytes()
 
     with open("/dev/fb1", "wb") as f:
         f.write(fb_data)

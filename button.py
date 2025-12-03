@@ -43,22 +43,18 @@ GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # cross out next time
 def cross_next():
-    # global times.ptr, times.strike_fourpm
     if times.ptr < len(times.crossed):
         times.crossed[times.ptr] = True               # mark the time as crossed out
         times.ptr += 1                          # move ptr forwards
         draw_screen()                     # update the display
         print(f"[CROSS] {times.times[times.ptr-1]}")
         return
-    #else:
-    #    print("[CROSS] All done")
 
     if not times.strike_fourpm:
         times.strike_fourpm = True
         print("[CROSS] 4 PM struck")
         draw_screen()
         
-        from confetti import run_confetti
         run_confetti()
 
         return
@@ -66,11 +62,8 @@ def cross_next():
     print("[CROSS] All done(4 PM already struck)")
 
 
-
-
 # double click to undo
 def undo_last():
-    # global times.ptr, times.strike_fourpm
 
     if times.strike_fourpm:
         times.strike_fourpm = False
@@ -89,12 +82,10 @@ def undo_last():
 
 
 def reset_all():
-    # global times.ptr, times.strike_fourpm
     for i in range(len(times.crossed)):
         times.crossed[i] = False                # uncross all times
     times.ptr = 0                               # reset ptr to first value
     times.strike_fourpm = False
-
     draw_screen()                         # update display
     print("[RESET] All cleared")
 
@@ -110,7 +101,6 @@ def process_button_events():
     # detects the actual clicks: single click, double click, and long press
     global click_pending, first_click_time, press_start_time
     global ignore_until_release
-    # times.ptr
 
     # is button released
     if ignore_until_release:
@@ -118,10 +108,8 @@ def process_button_events():
             ignore_until_release = False         # enables logic again
         return
 
-
     now = time.time()                            # sets current time for calc later
     state = GPIO.input(BUTTON_PIN)
-
     
     # safetey check to prevent edge cases
     if click_pending and first_click_time == 0:
@@ -130,7 +118,6 @@ def process_button_events():
     # if button is pressed (low)
     if state == 0:
         time.sleep(DEBOUNCE)                     # stabilize 
-
     
     ''' button pressed logic starts here '''
 
@@ -162,6 +149,3 @@ def process_button_events():
         cross_next()            # single click confirmed
         click_pending = False
         first_click_time = 0
-
-
-
