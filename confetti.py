@@ -1,36 +1,47 @@
 import numpy as np
 from PIL import Image, ImageDraw
+from framebuffer import render_to_image
 import time
-import random
 
 
-
-def confetti_frame():
-    img = Image.new("RGB", (480, 320), "white")
+def draw_confetti_frame(base_img):
+    img = base_img.copy()
     draw = ImageDraw.Draw(img)
 
-
     # any n of confetti 
-    for _ in range(80):
-        x = random.randint(0, 479)
-        y = random.randint(0, 319)
-        color = random.choice(["red", "blue", "green", "yellow", "purple", "orange"])
-        draw.rectangle((x, y, x+5, y+5), fill=color)
+    for _ in range(40):
+        x = np.random.randint(0, 480)
+        y = np.random.randint(0, 320)
+        color = tuple(np.random.randint(0, 255, 3))
+        size = np.random.randint(4, 10)
+        draw.rectangle((x, y, x+size, y+size), fill=color)
+
     return img
 
 
 
-def play_confetti_animation(write_fb_callback):
-    for _ in range (20):
-        img = confetti_frame()
-        arr = np.asarray(img, dtype=np.uint8)
+def run_confetti(duration=1.5, fps=20):
+    base_image = render_to_image()
+    frame_time = 1.0 / fps
+    end_time = time.time() + duration
 
-        # convert it to RGB 565 
-        r = (arr[:,:,0] >> 3).astype(np.uint16)
-        g = (arr[:,:,1] >> 2).astype(np.uint16)
-        b = (arr[:,:,2] >> 3).astype(np.uint16)
-        rgb565 = (r << 11) | (g << 5) | b
-        fb_data = rgb565.astype('<u2').tobytes()
+    while time.time() < end_time:
+        frame = draw_confetti_frame(base_image)
+        push_frame(frame)
+        time.sleep(frame_time)
 
-        write_fb_callback(fb_data)
-        time.sleep(0.05)
+
+
+def push_frame(img):
+    arr = np.asarray(img, dtype=np.uint8)
+
+    # convert it to RGB 565 
+    r = (arr[:,:,0] >> 3).astype(np.uint16)
+    g = (arr[:,:,1] >> 2).astype(np.uint16)
+    b = (arr[:,:,2] >> 3).astype(np.uint16)
+    rgb565 = (r << 11) | (g << 5) | b
+
+    fb_data = rgb565.astype('<u2').tobytes()
+
+    with open("/dev/fb1", "wb") as f:
+        f.write(fb_data)

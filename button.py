@@ -10,9 +10,8 @@
 import time
 import RPi.GPIO as GPIO
 import times
-# shared states from all modules
-# TEMP from times import crossed, ptr, col_1, col_2, times, strike_fourpm
 from framebuffer import draw_screen
+from confetti import run_confetti
 
 # BCM layout
 BUTTON_PIN = 20
@@ -58,6 +57,10 @@ def cross_next():
         times.strike_fourpm = True
         print("[CROSS] 4 PM struck")
         draw_screen()
+        
+        from confetti import run_confetti
+        run_confetti()
+
         return
 
     print("[CROSS] All done(4 PM already struck)")
