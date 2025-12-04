@@ -29,5 +29,17 @@ def run_confetti(duration=3.5, fps=20):
         time.sleep(frame_time)
 
 
+
+
+def push_frame(img):
+    arr = np.asarray(img, dtype=np.uint8)
+
+    r = (arr[:, :, 0] >> 3).astype(np.uint16)
+    g = (arr[:, :, 1] >> 2).astype(np.uint16)
+    b = (arr[:, :, 2] >> 3).astype(np.uint16)
+    rgb565 = (r << 11) | (g << 5) | b
+
+    fb_data = rgb565.astype('<u2').tobytes()
+
     with open("/dev/fb1", "wb") as f:
         f.write(fb_data)
